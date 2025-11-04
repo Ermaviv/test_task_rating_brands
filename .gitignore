@@ -19,7 +19,6 @@ lib64/
 parts/
 sdist/
 var/
-venv/
 tests/__pycache__/
 wheels/
 share/python-wheels/
