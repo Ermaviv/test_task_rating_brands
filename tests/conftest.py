@@ -1,4 +1,5 @@
 import pytest
+
 from main import main
 
 
@@ -8,13 +9,13 @@ def title_data():
 
 
 @pytest.fixture()
-def name_report_file():
-    return 'report_file'
+def headers():
+    return ['', 'brand', 'rating']
 
 
 @pytest.fixture()
-def title_data():
-    return ['name', 'brand', 'price', 'rating']
+def name_report_file():
+    return 'report_file'
 
 
 @pytest.fixture()
@@ -34,7 +35,6 @@ def combining_data_2():
 @pytest.fixture()
 def expected_result_1():
     return [
-        ['', 'brand', 'rating'],
         [1, 'apple', 4.8],
     ]
 
@@ -42,25 +42,10 @@ def expected_result_1():
 @pytest.fixture()
 def expected_result_2():
     return [
-        ['', 'brand', 'rating'],
         [1, 'brand_3', 4.8],
-        [1, 'brand_1', 3.8],
-        [3, 'brand_2', 1],
+        [2, 'brand_1', 3.8],
+        [3, 'brand_2', 1.0],
     ]
-
-
-'''
-@pytest.fixture()
-def cmd_output():
-    output = subprocess.run(
-        [
-            'python', 'main.py', '--files', 'products1.csv', 'products2.csv',
-            '--report', 'average-rating'
-        ],
-        capture_output=True, text=True
-    )
-    return output.stdout
-'''
 
 
 @pytest.fixture
@@ -69,15 +54,3 @@ def generate_check_file():
         ['--files', 'products1.csv', 'products2.csv',
          '--report', r'.\tests\check_file']
     )
-
-
-'''
-@pytest.fixture()
-def control_file():
-    return [
-        ['', 'brand', 'rating'],
-        [1, 'apple', 4.55],
-        [2, 'samsung', 4.53],
-        [3, 'xiaomi', 4.37]
-    ]
-'''

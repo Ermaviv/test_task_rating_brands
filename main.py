@@ -1,14 +1,21 @@
+"""Модуль для вычисления среднего рейтинга."""
 import argparse
 import csv
-from tabulate import tabulate
-import sys
 import os
+import sys
+from tabulate import tabulate
 
 
 def main(cmd_data):
+    """Главный файл."""
     validate_data(cmd_data)
     parser = argparse.ArgumentParser()
-    parser.add_argument('--files', nargs='+', required=True, help='Список файлов для обработки')
+    parser.add_argument(
+        '--files',
+        nargs='+',
+        required=True,
+        help='Список файлов для обработки'
+    )
     parser.add_argument(
         '--report',
         nargs=1,
@@ -21,6 +28,7 @@ def main(cmd_data):
 
 
 def combining_data(args):
+    """Сбор и группировка рейтингов."""
     content = {}
     if args.files:
         for file_name in args.files:
@@ -33,26 +41,32 @@ def combining_data(args):
                             continue
                         validate_string(string)
                         if string[1] not in content.keys():
-                            content[string[1]] = [float(string[len(title)-1])]
+                            content[string[1]] = [
+                                float(string[len(title) - 1])
+                            ]
                         else:
-                            content[string[1]].append(float(string[len(title)-1]))
+                            content[string[1]].append(
+                                float(string[len(title) - 1])
+                            )
             except FileNotFoundError:
                 print(f"Ошибка: файл {file_name} не найден.")
             except Exception as e:
                 print(f"Ошибка при чтении {file_name}: {str(e)}")
     else:
         print("Файлы не указаны."
-              "Укажите в формате python main.py --files <файлы со студентами> -- report <куда написать>"
+              "Укажите в формате python main.py --files"
+              "<файлы со студентами> -- report <куда написать>"
               )
     return [content, title]
 
 
 def write_count_data(report_file, content, title):
+    """Подсчет и запись файлов."""
     with open(report_file, 'w', encoding='utf8') as write_file:
         writer = csv.writer(write_file)
         content_item = []
-        numerate_list = [['', title[1], title[len(title)-1]]]
-        writer.writerow(['', title[1], title[len(title)-1]])
+        numerate_list = [['', title[1], title[len(title) - 1]]]
+        writer.writerow(['', title[1], title[len(title) - 1]])
 
         for name, marks in content.items():
             content[name] = round(sum(marks) / len(content[name]), 2)
@@ -68,16 +82,20 @@ def write_count_data(report_file, content, title):
 
 
 def validate_data(data):
+    """Валидация запроса."""
     length = len(data)
     if length <= 3:
-        raise ValueError("There are must be at least 4 values (get %d) like "
-                         "--files <name_file_with_table> --report <name_file_for_report>" % length)
+        raise ValueError("There are must be at least 4 values"
+                         "(get %d) like"
+                         "--files <name_file_with_table>"
+                         "--report <name_file_for_report>" % length)
     try:
         if data[0] != '--files':
             raise ValueError("First parameter must be '--files'.")
-        if data[length-2] != '--report':
-            raise ValueError("parameter '--report' must have a name of only 1 file.")
-        number_files = length-3
+        if data[length - 2] != '--report':
+            raise ValueError("parameter '--report'"
+                             "must have a name of only 1 file.")
+        number_files = length - 3
         for i in range(1, number_files):
             file_path = data[i]
             if not os.path.exists(file_path):
@@ -87,6 +105,7 @@ def validate_data(data):
 
 
 def validate_string(string):
+    """Построчная валидация строк входных файлов."""
     if float(string[2]) < 0:
         raise ValueError("string %d has invalid price.", string)
     if float(string[3]) < 0:
